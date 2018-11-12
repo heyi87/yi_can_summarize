@@ -1,3 +1,7 @@
 *.aws
 *.idea
 *.xml
+*bazel
+*data
+*log_root
+nohup.out
