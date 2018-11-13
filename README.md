@@ -1,8 +1,8 @@
 
 
-##An Examination and Application of Text Summarizer (Textsum) on Amazon Customer Reviews
-Category: NLP
-Team members: Yi He, Can Jin He
+## An Examination and Application of Text Summarizer (Textsum) on Amazon Customer Reviews
+#### Category: NLP
+#### Team members: Yi He, Can Jin He
 
 ## 1 Introduction
 
@@ -28,7 +28,7 @@ The CNN contains 92,570 articles, and DailyMail includes 219,503 articles. Moreo
 
 ## 3 Experiments and Results
 
-**Model description and Training strategy:** We used an open source Tensorflow model, Textsum, as our baseline. Textsum uses an encoder-decoder model with a bidirectional LSTM-RNN encoder and an attentive unidirectional LSTM-RNN decoder with beam search. The encoder-decoder model is trained end-to-end. [1] We followed the approach described by Danqi C. (2017) to train our baseline model. For the first decode timestep, we feed in the last output of the encoder as well as the embedding for the start "(<s>)" token. For subsequent decode timesteps, the decoder uses the last decoder output in addition to the word embedding for the previous word to generate the next word. During the train step, the previous word is the actual previous word from the gold label, but during the decode step, the previous word is the previously-generated word. The decoding process will continue until the generated summary reaches the max decode length set at 30, or until it generates an EOS token. [1]
+**Model description and Training strategy:** We used an open source Tensorflow model, Textsum, as our baseline. Textsum uses an encoder-decoder model with a bidirectional LSTM-RNN encoder and an attentive unidirectional LSTM-RNN decoder with beam search. The encoder-decoder model is trained end-to-end. [1] We followed the approach described by Danqi C. (2017) to train our baseline model. For the first decode timestep, we feed in the last output of the encoder as well as the embedding for the start token. For subsequent decode timesteps, the decoder uses the last decoder output in addition to the word embedding for the previous word to generate the next word. During the train step, the previous word is the actual previous word from the gold label, but during the decode step, the previous word is the previously-generated word. The decoding process will continue until the generated summary reaches the max decode length set at 30, or until it generates an EOS token. [1]
 
 **Results and Problems:** Similar to the results from Danqi C. (2017), the results we produced from our baseline model is inadequate on the CNN/DailyMail dataset. After training on 80% of the data set, we noticed a large number of <UNK> tokens in the summaries that made it unreadable. After investigating on Github, we found out that we ran into the same issue as other researchers who are trying to use the same model and dataset. CNN/DailyMail contains 312k articles, which is much fewer than Gigaword’s 10 million articles used by Textsum. The discrepancy between the number of articles between the two data sets resulted in such different outcomes.
 
