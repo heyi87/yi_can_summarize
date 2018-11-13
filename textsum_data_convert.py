@@ -1,7 +1,7 @@
-"""Example of Converting TextSum model data.
+"""Convert CNN data for textsum
 Usage:
-python textsum_data_convert.py --command text_to_binary --in_directories dailymail/stories --out_files dailymail-train.bin,dailymail-validation.bin,dailymail-test.bin --split 0.8,0.15,0.05
-python textsum_data_convert.py --command text_to_vocabulary --in_directories cnn/stories,dailymail/stories --out_files vocab
+python textsum_data_convert.py --command text_to_binary --in_directories cnn/stories --out_files train.bin, valid.bin, test.bin --split 0.8,0.15,0.05
+python textsum_data_convert.py --command text_to_vocabulary --in_directories cnn/stories --out_files vocab
 """
 
 import collections
