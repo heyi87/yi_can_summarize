@@ -136,28 +136,18 @@ def model(Tx, Ty, n_a, n_s, human_vocab_size, machine_vocab_size):
 
     ### START CODE HERE ###
 
-    # Step 1: Define your pre-attention Bi-LSTM. Remember to use return_sequences=True. (≈ 1 line)
     a = Bidirectional(LSTM(n_a, return_sequences=True), input_shape=(m, Tx, n_a * 2))(X)
 
-    # Step 2: Iterate for Ty steps
     for t in range(Ty):
-        # Step 2.A: Perform one step of the attention mechanism to get back the context vector at step t (≈ 1 line)
         context = one_step_attention(a, s)
 
-        # Step 2.B: Apply the post-attention LSTM cell to the "context" vector.
-        # Don't forget to pass: initial_state = [hidden state, cell state] (≈ 1 line)
         s, _, c = post_activation_LSTM_cell(context, initial_state=[s, c])
 
-        # Step 2.C: Apply Dense layer to the hidden state output of the post-attention LSTM (≈ 1 line)
         out = output_layer(s)
 
-        # Step 2.D: Append "out" to the "outputs" list (≈ 1 line)
         outputs.append(out)
 
-    # Step 3: Create model instance taking three inputs and returning the list of outputs. (≈ 1 line)
     model = Model([X, s0, c0], outputs=outputs)
-
-    ### END CODE HERE ###
 
     return model
 
@@ -174,20 +164,12 @@ def one_step_attention(a, s_prev):
     context -- context vector, input of the next (post-attetion) LSTM cell
     """
 
-    ### START CODE HERE ###
-    # Use repeator to repeat s_prev to be of shape (m, Tx, n_s) so that you can concatenate it with all hidden states "a" (≈ 1 line)
     s_prev = repeator(s_prev)
-    # Use concatenator to concatenate a and s_prev on the last axis (≈ 1 line)
     concat = concatenator([a, s_prev])
-    # Use densor1 to propagate concat through a small fully-connected neural network to compute the "intermediate energies" variable e. (≈1 lines)
     e = densor1(concat)
-    # Use densor2 to propagate e through a small fully-connected neural network to compute the "energies" variable energies. (≈1 lines)
     energies = densor2(e)
-    # Use "activator" on "energies" to compute the attention weights "alphas" (≈ 1 line)
     alphas = activator(energies)
-    # Use dotor together with "alphas" and "a" to compute the context vector to be given to the next (post-attention) LSTM-cell (≈ 1 line)
     context = dotor([alphas, a])
-    ### END CODE HERE ###
 
     return context
 if __name__ == '__main__':
