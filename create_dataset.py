@@ -79,9 +79,9 @@ if __name__ == '__main__':
 
 
     input_files =args.dir
-    text_vocab_file = os.path.join(args.out_dir, 'human_vocab.txt')
-    highlight_vocab_file=os.path.join(args.out_dir, 'machine_vocab.txt')
-    output_json = os.path.join(args.out_dir, 'data.json')
+    text_vocab_file = os.path.join(args.output_dir, 'human_vocab.txt')
+    highlight_vocab_file=os.path.join(args.output_dir, 'machine_vocab.txt')
+    output_json = os.path.join(args.output_dir, 'data.json')
 
     total_output = files_to_data(input_filenames=input_files, text_vocab_file=text_vocab_file, highlight_vocab_file=highlight_vocab_file)
     with open(output_json, 'w') as fp:
