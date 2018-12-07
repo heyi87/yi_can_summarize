@@ -32,12 +32,16 @@ def clean_text(document):
 
 def create_vocab_file(vocab_file, counter):
     with open(vocab_file, 'w') as writer:
+        i=0
         for word, count in counter.most_common(20000):
             writer.write(word + ' ' + str(count) + '\n')
+            i+=1
         writer.write('<s> 0\n')
         writer.write('</s> 0\n')
         writer.write('<UNK> 0\n')
         writer.write('<PAD> 0\n')
+
+    logging.info("{} number of words {}".format(vocab_file, i))
 
 
 def files_to_data(input_filenames, text_vocab_file, highlight_vocab_file):
@@ -58,8 +62,8 @@ def files_to_data(input_filenames, text_vocab_file, highlight_vocab_file):
         counter_highlight.update(highlight.split())
         i+=1
     logging.info("number of files in data.json: {}".format(i))
-    logging.info("number of vocab in human_vocab.txt: {}".format(len(counter_text.keys())))
-    logging.info("number of vocab in machine_vocab.txt: {}".format(len(counter_highlight.keys())))
+    logging.info("number of vocab in human_vocab: {}".format(len(counter_text.keys())))
+    logging.info("number of vocab in machine_vocab: {}".format(len(counter_highlight.keys())))
 
     create_vocab_file(text_vocab_file, counter_text)
     create_vocab_file(highlight_vocab_file, counter_highlight)
