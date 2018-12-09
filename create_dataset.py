@@ -33,7 +33,7 @@ def clean_text(document):
 def create_vocab_file(vocab_file, counter):
     with open(vocab_file, 'w') as writer:
         i=0
-        for word, count in counter.most_common(20000):
+        for word, count in counter.most_common(200000):
             writer.write(word + ' ' + str(count) + '\n')
             i+=1
         writer.write('<s> 0\n')
