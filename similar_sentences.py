@@ -92,7 +92,11 @@ if __name__ == '__main__':
 
     module_url = "https://tfhub.dev/google/universal-sentence-encoder-large/1"  # @param ["https://tfhub.dev/google/universal-sentence-encoder/1", "https://tfhub.dev/google/universal-sentence-encoder-large/1"]
     embed = hub.Module(module_url)
-    session = tf.Session()
+    config = tf.ConfigProto()
+    config.intra_op_parallelism_threads = 10
+    config.inter_op_parallelism_threads = 10
+    session =tf.Session(config=config)
+
     session.run([tf.global_variables_initializer(), tf.tables_initializer()])
 
     for i in stories:
