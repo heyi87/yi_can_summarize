@@ -96,9 +96,10 @@ if __name__ == '__main__':
     config.intra_op_parallelism_threads = 18
     config.inter_op_parallelism_threads = 18
 
-    with tf.Session(config=config) as session:
-        session.run([tf.global_variables_initializer(), tf.tables_initializer()])
+    for i in stories:
+        with tf.Session(config=config) as session:
+            session.run([tf.global_variables_initializer(), tf.tables_initializer()])
+            find_most_two_similar_sentences(stories, story_index=i, embed=embed, session=session,
+                                        output_dir=args.output_dir)
+        logging.info(i)
 
-        for i in stories:
-            find_most_two_similar_sentences(stories, story_index=i, embed=embed, session=session, output_dir=args.output_dir)
-            logging.info(i)
