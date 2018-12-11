@@ -75,13 +75,13 @@ def _convert_files_to_binary(input_filenames, output_filename):
     for filename in input_filenames:
       with open(filename, 'r') as f:
         document = f.read()
-    
+
       document_parts = document.split('\n', 1)
       assert len(document_parts) == 2
-    
-      title = '<d><p><s>' + document_parts[0] + '</s></p></d>'
-      
-      body = document_parts[1].decode('utf8').replace('\n', ' ').replace('\t', ' ')
+
+      title = "<d><p><s> {} </s></p></d>".format(document_parts[1].encode('utf8').replace('\n','').replace('@highlight',''))
+
+      body = document_parts[0].decode('utf8').replace('\n', ' ').replace('\t', ' ')
       sentences = sent_tokenize(body)
       body = '<d><p>' + ' '.join(['<s>' + sentence + '</s>' for sentence in sentences]) + '</p></d>'
       body = body.encode('utf8')
@@ -95,6 +95,15 @@ def _convert_files_to_binary(input_filenames, output_filename):
       writer.write(struct.pack('%ds' % str_len, tf_example_str))
 
 def main(unused_argv):
+
+  # # For Testing:
+  # tf.app.flags.DEFINE_string('command', 'text_to_binary',
+  #                            'Either text_to_vocabulary or text_to_binary.'
+  #                            'Specify FLAGS.in_directories accordingly.')
+  # tf.app.flags.DEFINE_string('in_directories', 'data/similar_sentence/', 'path to directory')
+  # tf.app.flags.DEFINE_string('out_files', 'data/train.bin,data/valid.bin,data/test.bin', 'comma separated paths to files')
+  # tf.app.flags.DEFINE_string('split', '0.8,0.15,0.05', 'comma separated fractions of data')
+
   assert FLAGS.command and FLAGS.in_directories and FLAGS.out_files
   output_filenames = FLAGS.out_files.split(',')
   input_directories = FLAGS.in_directories.split(',')
