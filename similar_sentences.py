@@ -113,7 +113,7 @@ if __name__ == '__main__':
 
     for i in xrange(len(stories)):
         with tf.Graph().as_default():
-            module_url = "https://tfhub.dev/google/universal-sentence-encoder-large/1"  # @param ["https://tfhub.dev/google/universal-sentence-encoder/1", "https://tfhub.dev/google/universal-sentence-encoder-large/1"]
+            module_url = "https://tfhub.dev/google/universal-sentence-encoder-large/3"  # @param ["https://tfhub.dev/google/universal-sentence-encoder/1", "https://tfhub.dev/google/universal-sentence-encoder-large/1"]
             embed = hub.Module(module_url)
             config = tf.ConfigProto()
             config.intra_op_parallelism_threads = 18
