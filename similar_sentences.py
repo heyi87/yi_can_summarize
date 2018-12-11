@@ -93,12 +93,12 @@ if __name__ == '__main__':
     module_url = "https://tfhub.dev/google/universal-sentence-encoder-large/1"  # @param ["https://tfhub.dev/google/universal-sentence-encoder/1", "https://tfhub.dev/google/universal-sentence-encoder-large/1"]
     embed = hub.Module(module_url)
     config = tf.ConfigProto()
-    config.intra_op_parallelism_threads = 10
-    config.inter_op_parallelism_threads = 10
-    session =tf.Session(config=config)
+    config.intra_op_parallelism_threads = 18
+    config.inter_op_parallelism_threads = 18
 
-    session.run([tf.global_variables_initializer(), tf.tables_initializer()])
+    with tf.Session(config=config) as session:
+        session.run([tf.global_variables_initializer(), tf.tables_initializer()])
 
-    for i in stories:
-        find_most_two_similar_sentences(stories, story_index=i, embed=embed, session=session, output_dir=args.output_dir)
-        logging.info(i)
+        for i in stories:
+            find_most_two_similar_sentences(stories, story_index=i, embed=embed, session=session, output_dir=args.output_dir)
+            logging.info(i)
