@@ -103,19 +103,19 @@ def find_most_two_similar_sentences(stories, embed, session, output_dir):
     return None
 
 if __name__ == '__main__':
-    # parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
-    # parser.add_argument("-i", "--dir")
-    # parser.add_argument("-o", "--output_dir")
-    #
-    # args = parser.parse_args()
-    # logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)-15s %(levelname)-8s %(message)s',
-    #                     datefmt='%m-%d %H:%M:%S')
-    #
-    # directory = args.dir
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("-i", "--dir")
+    parser.add_argument("-o", "--output_dir")
+
     args = parser.parse_args()
-    directory='/Users/yihe/Desktop/Stanford/yi_can_summarize/data/cnn/stories'
-    args.output_dir='/Users/yihe/Desktop/Stanford/yi_can_summarize/data/cnn/sentence_encoding/'
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)-15s %(levelname)-8s %(message)s',
+                        datefmt='%m-%d %H:%M:%S')
+
+    directory = args.dir
+    # parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
+    # args = parser.parse_args()
+    # directory='/Users/yihe/Desktop/Stanford/yi_can_summarize/data/cnn/stories'
+    # args.output_dir='/Users/yihe/Desktop/Stanford/yi_can_summarize/data/cnn/sentence_encoding/'
     stories = load_stories(directory)
     logging.info('Loaded Stories %d' % len(stories))
     with tf.Graph().as_default():
