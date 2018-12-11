@@ -5,30 +5,19 @@ import operator
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
-import os
-import pandas as pd
-import re
-import seaborn as sns
 from os import listdir
 import argparse
 import logging
 import itertools
-from itertools import izip
+import codecs
 
-def pairwise(iterable):
-    "s -> (s0, s1), (s2, s3), (s4, s5), ..."
-    a = iter(iterable)
-    return izip(a, a)
 # load doc into memory
 def load_doc(filename):
     # open the file as read only
-    file = open(filename)
-    # read all text
-    text = file.read()
-    # close the file
-    file.close()
-    return text
+    with codecs.open(filename, "r", "utf-8") as fp:
+        text=fp.read()
 
+    return text
 
 # split a document into news story and highlights
 def split_story(doc):
@@ -39,7 +28,6 @@ def split_story(doc):
     # strip extra white space around each highlight
     highlights = [h.strip() for h in highlights if len(h) > 0]
     return story, highlights
-
 
 # load all stories in a directory
 def load_stories(directory):
@@ -55,12 +43,11 @@ def load_stories(directory):
     return stories
 
 def find_most_two_similar_sentences(stories, embed, session, output_dir):
-    story_messages=[]
-    highlights_messages=[]
-    filenames = []
-    number_of_sentences=[]
-    try:
 
+    logging.info("working on this number of files: {}".format(len(stories)))
+    story_messages, highlights_messages, filenames, number_of_sentences = [],[],[],[]
+
+    try:
         for i in xrange(len(stories)): #get the first 100 into lists
             story_for_this = sent_tokenize(stories[i]['story'])
             number_of_sentences.append(len(story_for_this))
@@ -82,6 +69,11 @@ def find_most_two_similar_sentences(stories, embed, session, output_dir):
 
         for k in xrange(len(number_of_sentences)):
 
+            #flag to make sure things don't go over:
+            if start_index>len(number_of_sentences):
+                logging.info("went over by {}>{}".format(start_index, len(number_of_sentences)))
+                break
+
             embedding_this_document = message_embeddings[start_index:end_index]
             corr=np.inner(embedding_this_document, message_embeddings_highlight[k])
             corr_new = corr.tolist()
@@ -89,13 +81,13 @@ def find_most_two_similar_sentences(stories, embed, session, output_dir):
             corr_new2 = [0 if x == value else x for x in corr_new]
             index2, value2 = max(enumerate(corr_new2), key=operator.itemgetter(1))
 
-            new_article = "{} {} \n\n@highlight \n\n{}".format(story_messages_unlist[start_index+index], story_messages_unlist[start_index+index2],highlights_messages[k])
+            new_article = u"{} {} \n\n@highlight \n\n{}".format(story_messages_unlist[start_index+index], story_messages_unlist[start_index+index2],highlights_messages[k])
 
             start_index=start_index+number_of_sentences[k]
             end_index=start_index+number_of_sentences[k+1]
 
             output_file = "{}/{}".format(output_dir, filenames[k])
-            with open(output_file,'w') as fp:
+            with codecs.open(output_file, "w", "utf-8") as fp:
                 fp.write(new_article)
                 logging.info(output_file)
     except Exception as e:
@@ -115,7 +107,7 @@ if __name__ == '__main__':
     # parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
     # args = parser.parse_args()
     # directory='/Users/yihe/Desktop/Stanford/yi_can_summarize/data/cnn/stories'
-    # args.output_dir='/Users/yihe/Desktop/Stanford/yi_can_summarize/data/cnn/sentence_encoding/'
+    # args.output_dir='/Users/yihe/Desktop/Stanford/yi_can_summarize/data/cnn/similar_sentence/'
     stories = load_stories(directory)
     logging.info('Loaded Stories %d' % len(stories))
     with tf.Graph().as_default():
@@ -126,6 +118,10 @@ if __name__ == '__main__':
         config.inter_op_parallelism_threads = 18
 
         for i in xrange(len(stories)):
+
+            if (i)*100>len(stories):
+                logging.info('completed')
+                break
             try:
                 story_100 = stories[i*100:(i+1)*100]
                 logging.info("from {} to {}".format(i*100,(i+1)*100))
