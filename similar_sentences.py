@@ -111,7 +111,6 @@ if __name__ == '__main__':
     stories = load_stories(directory)
     logging.info('Loaded Stories %d' % len(stories))
 
-
     for i in xrange(len(stories)):
         module_url = "https://tfhub.dev/google/universal-sentence-encoder-large/1"  # @param ["https://tfhub.dev/google/universal-sentence-encoder/1", "https://tfhub.dev/google/universal-sentence-encoder-large/1"]
         embed = hub.Module(module_url)
@@ -121,13 +120,13 @@ if __name__ == '__main__':
         with tf.Session(config=config) as session: #restart each session so does not take so much memory
             session.run([tf.global_variables_initializer(), tf.tables_initializer()])
 
-            if (i)*1000>len(stories):
+            if (i)*200>len(stories):
                 logging.info('completed')
                 break
             try:
-                story_1000 = stories[i*1000:(i+1)*1000]
-                logging.info("from {} to {}".format(i*1000,(i+1)*1000))
-                find_most_two_similar_sentences(story_1000, embed=embed, session=session,
+                story_200 = stories[i*200:(i+1)*200]
+                logging.info("from {} to {}".format(i*200,(i+1)*200))
+                find_most_two_similar_sentences(story_200, embed=embed, session=session,
                                             output_dir=args.output_dir)
             except Exception as e:
                 logging.info(e)
