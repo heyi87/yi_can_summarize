@@ -26,6 +26,15 @@ aws s3 cp s3://yicindy/cnn_stories.tar .
 tar -xvf cnn_stories.tar
 rm -rf cnn_stories.tar
 
+##divide the cnn stories into pieces for sentence encoding
+for f in *;
+do
+    d=dir_$(printf %03d $((i/20000+1)));
+    mkdir -p $d;
+    mv "$f" $d;
+    let i++;
+done
+
 cd ..
 python textsum_data_convert.py \
   --command text_to_vocabulary \
