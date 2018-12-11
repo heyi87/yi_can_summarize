@@ -116,19 +116,18 @@ if __name__ == '__main__':
         config = tf.ConfigProto()
         config.intra_op_parallelism_threads = 18
         config.inter_op_parallelism_threads = 18
-        with tf.Session(config=config) as session:
-            session.run([tf.global_variables_initializer(), tf.tables_initializer()])
 
-            for i in xrange(len(stories)):
+        for i in xrange(len(stories)):
+            with tf.Session(config=config) as session: #restart each session so does not take so much memory
+                session.run([tf.global_variables_initializer(), tf.tables_initializer()])
 
                 if (i)*100>len(stories):
                     logging.info('completed')
                     break
                 try:
-                    story_1000 = stories[i*100:(i+1)*100]
+                    story_100 = stories[i*100:(i+1)*100]
                     logging.info("from {} to {}".format(i*100,(i+1)*100))
-
-                    find_most_two_similar_sentences(story_1000, embed=embed, session=session,
+                    find_most_two_similar_sentences(story_100, embed=embed, session=session,
                                                 output_dir=args.output_dir)
                 except Exception as e:
                     logging.info(e)
