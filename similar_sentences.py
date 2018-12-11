@@ -112,12 +112,14 @@ if __name__ == '__main__':
     logging.info('Loaded Stories %d' % len(stories))
 
     for i in xrange(len(stories)):
-        module_url = "https://tfhub.dev/google/universal-sentence-encoder-large/1"  # @param ["https://tfhub.dev/google/universal-sentence-encoder/1", "https://tfhub.dev/google/universal-sentence-encoder-large/1"]
-        embed = hub.Module(module_url)
-        config = tf.ConfigProto()
-        config.intra_op_parallelism_threads = 18
-        config.inter_op_parallelism_threads = 18
-        with tf.Session(config=config) as session: #restart each session so does not take so much memory
+        with tf.Graph().as_default():
+            module_url = "https://tfhub.dev/google/universal-sentence-encoder-large/1"  # @param ["https://tfhub.dev/google/universal-sentence-encoder/1", "https://tfhub.dev/google/universal-sentence-encoder-large/1"]
+            embed = hub.Module(module_url)
+            config = tf.ConfigProto()
+            config.intra_op_parallelism_threads = 18
+            config.inter_op_parallelism_threads = 18
+            session = tf.Session(config=config)
+
             session.run([tf.global_variables_initializer(), tf.tables_initializer()])
 
             if (i)*200>len(stories):
