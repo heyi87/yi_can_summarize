@@ -110,25 +110,25 @@ if __name__ == '__main__':
     # args.output_dir='/Users/yihe/Desktop/Stanford/yi_can_summarize/data/cnn/similar_sentence/'
     stories = load_stories(directory)
     logging.info('Loaded Stories %d' % len(stories))
-    with tf.Graph().as_default():
+
+
+    for i in xrange(len(stories)):
         module_url = "https://tfhub.dev/google/universal-sentence-encoder-large/1"  # @param ["https://tfhub.dev/google/universal-sentence-encoder/1", "https://tfhub.dev/google/universal-sentence-encoder-large/1"]
         embed = hub.Module(module_url)
         config = tf.ConfigProto()
         config.intra_op_parallelism_threads = 18
         config.inter_op_parallelism_threads = 18
+        with tf.Session(config=config) as session: #restart each session so does not take so much memory
+            session.run([tf.global_variables_initializer(), tf.tables_initializer()])
 
-        for i in xrange(len(stories)):
-            with tf.Session(config=config) as session: #restart each session so does not take so much memory
-                session.run([tf.global_variables_initializer(), tf.tables_initializer()])
-
-                if (i)*100>len(stories):
-                    logging.info('completed')
-                    break
-                try:
-                    story_100 = stories[i*100:(i+1)*100]
-                    logging.info("from {} to {}".format(i*100,(i+1)*100))
-                    find_most_two_similar_sentences(story_100, embed=embed, session=session,
-                                                output_dir=args.output_dir)
-                except Exception as e:
-                    logging.info(e)
-                    break
+            if (i)*1000>len(stories):
+                logging.info('completed')
+                break
+            try:
+                story_1000 = stories[i*1000:(i+1)*1000]
+                logging.info("from {} to {}".format(i*1000,(i+1)*1000))
+                find_most_two_similar_sentences(story_1000, embed=embed, session=session,
+                                            output_dir=args.output_dir)
+            except Exception as e:
+                logging.info(e)
+                break
