@@ -70,8 +70,8 @@ def find_most_two_similar_sentences(stories, embed, session, output_dir):
         for k in xrange(len(number_of_sentences)):
 
             #flag to make sure things don't go over:
-            if start_index>len(number_of_sentences):
-                logging.info("went over by {}>{}".format(start_index, len(number_of_sentences)))
+            if start_index>len(message_embeddings):
+                logging.info("went over by {}>{}".format(start_index, len(message_embeddings)))
                 break
 
             embedding_this_document = message_embeddings[start_index:end_index]
@@ -119,12 +119,12 @@ if __name__ == '__main__':
 
         for i in xrange(len(stories)):
 
-            if (i)*100>len(stories):
+            if (i)*1000>len(stories):
                 logging.info('completed')
                 break
             try:
-                story_100 = stories[i*100:(i+1)*100]
-                logging.info("from {} to {}".format(i*100,(i+1)*100))
+                story_100 = stories[i*1000:(i+1)*1000]
+                logging.info("from {} to {}".format(i*1000,(i+1)*1000))
 
                 with tf.Session(config=config) as session:
                     session.run([tf.global_variables_initializer(), tf.tables_initializer()])
