@@ -5,3 +5,6 @@
 *data
 *log_root
 nohup.out
+*.tar
+*.txt
+.ipynb_checkpoints/
