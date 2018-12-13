@@ -57,6 +57,17 @@ bazel-bin/textsum/seq2seq_attention \
   --train_dir=log/train \
   --truncate_input=True
 
+#validation
+$ bazel-bin/textsum/seq2seq_attention \
+    --mode=eval \
+    --article_key=article \
+    --abstract_key=abstract \
+    --data_path=data/validation-* \
+    --vocab_path=data/vocab \
+    --log_root=textsum/log_root \
+    --eval_dir=textsum/log_root/eval
+
+
 #test
 bazel-bin/textsum/seq2seq_attention \
   --mode=decode \
