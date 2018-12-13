@@ -79,13 +79,13 @@ def _convert_files_to_binary(input_filenames, output_filename):
       document_parts = document.split('\n', 1)
       assert len(document_parts) == 2
 
-      title = "<d><p><s> {} </s></p></d>".format(document_parts[1].encode('utf8').replace('\n','').replace('@highlight',''))
-
+      title = u"<d><p><s> {} </s></p></d>".format(document_parts[1].decode('utf8').replace('\n','').replace('@highlight',''))
       body = document_parts[0].decode('utf8').replace('\n', ' ').replace('\t', ' ')
       sentences = sent_tokenize(body)
       body = '<d><p>' + ' '.join(['<s>' + sentence + '</s>' for sentence in sentences]) + '</p></d>'
       body = body.encode('utf8')
-    
+      title = title.encode('utf8')
+
       tf_example = example_pb2.Example()
       tf_example.features.feature['article'].bytes_list.value.extend([body])
       tf_example.features.feature['abstract'].bytes_list.value.extend([title])
