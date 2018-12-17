@@ -47,7 +47,7 @@ def clean_text(document):
 
 def files_to_data(input_dir, output_dir, Numberbatch_emb):
 
-    raw_X, raw_Y, num_of_words_in_X, num_of_words_in_Y = [], [], [], []
+    raw_X, raw_Y, num_of_words_in_X = [], [], []
 
     os.chdir(input_dir)
     for filename in glob.glob("*.story"): #get all the stories from cnn and daily news
@@ -57,13 +57,12 @@ def files_to_data(input_dir, output_dir, Numberbatch_emb):
         text, highlight = clean_text(document)
         raw_X.append(text)
         raw_Y.append(highlight)
-
         num_of_words_in_X.append(len(text))
-        num_of_words_in_Y.append(len(highlight))
+
 
     #some stories have too many words, remove the longest 5% of words, take the 95 percentile
-    X = np.array([string_to_int(i,int(np.percentile(num_of_words_in_X, 95)),Numberbatch_emb) for i in raw_X]) #to np array
-    Y = np.array([string_to_int(i, int(np.percentile(num_of_words_in_Y, 95)),Numberbatch_emb) for i in raw_Y]) #to np array
+    X = np.array([string_to_int(i, max(num_of_words_in_X), Numberbatch_emb) for i in raw_X]) #to np array
+    Y = np.array([string_to_int(i, 30, Numberbatch_emb) for i in raw_Y]) #to np array
 
     X.tofile(os.path.join(output_dir, 'X.dat'))
     Y.tofile(os.path.join(output_dir, 'Y.dat'))
