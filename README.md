@@ -106,19 +106,37 @@ python rougescore.py -d log/amazon_decode/decode -r log/amazon_decode/ref  -am e
 ```
 
 Sentence Encoding
-	Find the two most similar sentences in the article to the highlight 
-	This will create a stories directory only contain the two most similar sentences of the article to the first highlight 
+Find the two most similar sentences in the article to the highlight 
+This will create a stories directory only contain the two most similar sentences of the article to the first highlight 
 ```
 python similar_sentences.py -i example_data/cnn/stories -o example_data/cnn/similar_sentences
 ```
 Once this is created, use it for training for the TextSum and calculate the Rouge scores
 
 ConceptNet NumberBatch:
-	ConceptNet NumberBatch require an embedding from http://conceptnet.s3.amazonaws.com/precomputed-data/2016/numberbatch/17.06/mini.h5 
-	We used the mini.h5 which vectorize each English word into 300 numbers. 
+ConceptNet NumberBatch require an embedding from http://conceptnet.s3.amazonaws.com/precomputed-data/2016/numberbatch/17.06/mini.h5 
+We used the mini.h5 which vectorize each English word into 300 numbers. 
 ```
-python ConceptNet_Numberbatch.py -i example_data/cnn/stories -o example_data/ -ne mini.h5
+python conceptnet_numberbatch.py -i example_data/cnn/stories -o example_data/ -ne mini.h5
 ```
 Once this is created, use it for training for TextSum and calculate the Rouge scores
 
+Parameter tuning:
+Parameters are defined in textsum/seq2seq_attention.py line 172
+We found the most optimal parameters with the highest Rouge scores are:
+```
+learning rate =0.15
+batch size = 4 
+encoding layer = 4
+number of hidden units = 256
+number of softmax samples = 4,096
+word embedding size = 300
+```
+
+For plotting:
+We used TensorBoardPlot.py to gather the required data from the TensorFlow events data format, events.out.tfevents. We outputted the data into csv format and used Tabealu for data visualization. 
+
+References & Resources:
+The libraries we used are listed in requirements.txt and Google's TextSum library:
+https://github.com/tensorflow/models/tree/master/research/textsum
 
